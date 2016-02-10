@@ -128,7 +128,7 @@ class Translator
 
     protected function getSessionLocale()
     {
-        if (!Session::has(self::SESSION_LOCALE)) {
+        if (!Session::has(self::SESSION_LOCALE) || !env('STORE_RAINLAB_TRANSLATION_SESSION', true)) {
             return null;
         }
 
@@ -137,6 +137,11 @@ class Translator
 
     protected function setSessionLocale($locale)
     {
+        if(!env('STORE_RAINLAB_TRANSLATION_SESSION', true))
+        {
+            return;
+        }
+
         Session::put(self::SESSION_LOCALE, $locale);
     }
 }

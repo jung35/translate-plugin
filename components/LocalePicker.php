@@ -4,6 +4,7 @@ use Redirect;
 use RainLab\Translate\Models\Locale as LocaleModel;
 use RainLab\Translate\Classes\Translator;
 use Cms\Classes\ComponentBase;
+use Request;
 
 class LocalePicker extends ComponentBase
 {
@@ -43,7 +44,18 @@ class LocalePicker extends ComponentBase
         }
 
         $this->translator->setLocale($locale);
+        $params = Request::route()->parameters();
 
-        return Redirect::to($this->currentPageUrl());
+        $slug = "";
+        if(isset($params['slug']))
+        {
+            $slug = $params['slug'];
+            $slug = substr($slug, 0, 1) == '/' ? substr($slug, 1) : $params['slug'];
+        }
+
+        $locale = $locale == 'en' ? '' : "/$locale";
+        $url = Request::root() . "$locale/$slug";
+
+        return Redirect::to($url);
     }
 }
